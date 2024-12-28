@@ -1,0 +1,42 @@
+spring:
+  application.name : function-extract
+  cloud:
+    function:
+      definition: "extractPaymentFunction;extractPointFunction;extractHadoopFunction;\
+      accountResultConvertFunction;\
+      redisSaveConsumer;"
+    stream:
+      bindings:
+        extractPaymentFunction-in-0:
+          destination: extract.v1
+          group: payment-group.v1
+        extractPointFunction-in-0:
+          destination: extract.v1
+          group: point-group.v1
+        extractHadoopFunction-in-0:
+          destination: extract.v1
+          group: hadoop-group.v1
+
+        extractPaymentFunction-out-0:
+          destination: account.v1
+        extractPointFunction-out-0:
+          destination: account.v1
+        extractHadoopFunction-out-0:
+          destination: account.v1
+
+        accountResultConvertFunction-in-0:
+          destination: account.v1
+
+        accountResultConvertFunction-out-0:
+          destination: redis.sink
+
+        redisSaveConsumer-in-0:
+          destination: redis.sink
+
+logging:
+  level:
+    ROOT : info
+    io:
+      lettuce:
+        core:
+          protocol: trace
